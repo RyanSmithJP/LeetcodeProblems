@@ -1,0 +1,59 @@
+import java.util.Arrays;
+class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        /**
+         If n is odd median = X[num elements + 1/2]
+         if n is even median = (X[n/2]+X[n/2+1])/2
+         Step 1 - merge array
+         Lets make a new array and copy everything over to it
+         */
+        int totalElements = nums1.length+nums2.length;
+        int[] merge = new int[totalElements];
+        //Parameters are source array, starting pos of source, dest array, starting pos of dest
+        //num elements to copy
+        System.arraycopy(nums1,0,merge,0,nums1.length);
+        System.arraycopy(nums2,0,merge,nums1.length,nums2.length);
+        //Quick sort the new array
+        quickSort(merge,0,merge.length-1);
+        for(int element: merge){
+            System.out.println(element);
+        }
+        //Find the median
+        if(merge.length%2==1){
+            //subtract 1 because of indexing
+            return merge[((merge.length)/2)];
+        }
+        else{
+            return ((double)(merge[(merge.length/2)-1]+merge[(merge.length/2)]))/2;
+        }
+    }
+//Quicksort implementation source - https://www.baeldung.com/java-quicksort
+    public void quickSort(int arr[], int begin, int end) {
+        if (begin < end) {
+            int partitionIndex = partition(arr, begin, end);
+
+            quickSort(arr, begin, partitionIndex-1);
+            quickSort(arr, partitionIndex+1, end);
+        }
+    }
+    private int partition(int arr[], int begin, int end) {
+        int pivot = arr[end];
+        int i = (begin-1);
+
+        for (int j = begin; j < end; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+
+                int swapTemp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = swapTemp;
+            }
+        }
+
+        int swapTemp = arr[i+1];
+        arr[i+1] = arr[end];
+        arr[end] = swapTemp;
+
+        return i+1;
+    }
+}
